@@ -79,13 +79,33 @@ repo's GitHub releases and installs updates itself.
 ## Testing it here
 
 This VM **can** run the Android emulator - `emulator -accel-check` reports WHPX usable.
+(An older note claimed it could not, "no nested virtualization". That was assumed, never
+tested, and it is wrong.)
 
 ```powershell
-$T = "$env:LOCALAPPDATA\AndroidBuild"
-$env:ANDROID_HOME = "$T\sdk"
-& "$T\sdk\emulator\emulator.exe" -avd fourinarow -no-window -no-audio -no-boot-anim -gpu swiftshader_indirect
-& "$T\sdk\platform-tools\adb.exe" install -r android\app\build\outputs\apk\debug\app-debug.apk
-& "$T\sdk\platform-tools\adb.exe" exec-out screencap -p > shot.png
+powershell -ExecutionPolicy Bypass -File tools\run_emulator.ps1          # release APK
+powershell -ExecutionPolicy Bypass -File tools\run_emulator.ps1 -Debug   # debug build
 ```
 
-No window and software rendering, because an RDP session has no usable GL.
+That script boots the `fourinarow` AVD, installs, and launches the app. Three things it
+handles that cost real time the first time round:
+
+- It starts the emulator with `Start-Process`, **not** as a child of the calling shell.
+  Launched as a background job it gets reaped when the job ends and the window vanishes
+  mid-session, logging a clean shutdown with nothing to explain it.
+- The **first `adb install` after a boot fails** with a `StorageManager.allocateBytes`
+  stack trace. It is a boot race, not a disk problem, so the script retries.
+- **"System UI isn't responding"** shortly after boot is the emulator's own launcher
+  crashing under software rendering. Tap Wait. It is not this app.
+
+Rendering is software (`-gpu swiftshader_indirect`) because the VM has no GPU and an RDP
+session has no usable GL, so everything is slow and `screencap` can lag several frames
+behind. A screenshot catching the drop animation mid-flight is not a bug - re-shoot before
+concluding anything.
+
+To actually inspect an animation, slow it down. Compose honours the system animator scale:
+
+```powershell
+adb shell settings put global animator_duration_scale 10   # 260ms drop becomes 2.6s
+adb shell settings put global animator_duration_scale 1    # put it back
+```
