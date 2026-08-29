@@ -6,6 +6,31 @@ against a computer opponent at three strengths.
 Called "Four in a Row" rather than "Connect 4" on purpose: *Connect 4* is a Hasbro
 trademark. The game itself is not protected, the name is.
 
+## Installing it
+
+It is not on the Play Store, so Android will ask you to confirm a couple of things the
+first time. Two ways in.
+
+**With automatic updates.** Install [Obtainium](https://github.com/ImranR98/Obtainium)
+(download the APK from its Releases page and open it). Then in Obtainium tap **Add App**,
+paste this repo's address, and tap **Add**, then **Install**. Obtainium watches this repo
+and installs new versions itself from then on.
+
+```
+https://github.com/bbershad/FourInARow
+```
+
+**Just the once.** Open [the latest release](../../releases/latest) on your phone,
+download `FourInARow-<version>.apk`, and tap it. Simpler, but you will not get updates.
+
+Either way Android asks permission to install from that app the first time, and Play
+Protect will say it does not recognise the developer. That warning appears for anything
+not installed from the Play Store. Tap **More details**, then **Install anyway**.
+
+Once it is installed, check **Settings > Apps > Four in a Row > Permissions**. It should
+list none at all. That is the claim below, verified against Android rather than taken on
+trust.
+
 ## What it does
 
 - **Two players** on the same phone. **A coin flip decides who goes first, every game** -
