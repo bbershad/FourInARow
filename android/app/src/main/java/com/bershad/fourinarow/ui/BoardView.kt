@@ -59,12 +59,23 @@ fun BoardView(
     // Runs 0 -> 1 each time a disc is played. Squared on use, so the disc accelerates
     // downward instead of gliding at a constant speed.
     val fall = remember { Animatable(1f) }
+
+    // Which move the animator has actually been handed. A LaunchedEffect does not run until
+    // AFTER the frame that triggered it has composed, so for that first frame `fall` still
+    // holds 1f from the previous drop. Deciding "is this disc falling?" from `fall.value`
+    // alone therefore drew the new disc at its landing square, and only then snapped it up
+    // to the chute to fall - the disc appeared at rest, vanished, and dropped again.
+    // Comparing indices instead makes the frame before the animator starts read as
+    // progress 0, so the disc's first appearance is already at the top of the chute.
+    var animatedIndex by remember { mutableIntStateOf(moveIndex) }
     LaunchedEffect(moveIndex) {
         if (moveIndex > 0 && lastDrop != null) {
             fall.snapTo(0f)
+            animatedIndex = moveIndex
             fall.animateTo(1f, tween(durationMillis = 260, easing = LinearEasing))
         } else {
             fall.snapTo(1f)
+            animatedIndex = moveIndex
         }
     }
 
@@ -133,7 +144,8 @@ fun BoardView(
 
         // Holes and settled discs. The disc that is currently falling is skipped here and
         // drawn afterwards at its animated position.
-        val falling = if (fall.value < 1f) lastDrop else null
+        val progress = if (animatedIndex == moveIndex) fall.value else 0f
+        val falling = if (progress < 1f) lastDrop else null
         for (col in 0 until COLS) {
             for (row in 0 until ROWS) {
                 val centre = centreOf(col, row)
@@ -159,7 +171,7 @@ fun BoardView(
         if (falling != null) {
             val target = centreOf(falling.col, falling.row)
             val start = chute * 0.5f
-            val t = fall.value * fall.value
+            val t = progress * progress
             val y = start + (target.y - start) * t
             drawDisc(grid[falling.col][falling.row] ?: toMove, Offset(target.x, y), radius, palette)
         }
