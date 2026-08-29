@@ -16,11 +16,13 @@
         allocateBytes stack trace. That is a boot race, so this script just retries.
 
     Switches:
-      -Debug   install the debug APK from the build tree instead of the release APK.
+      -DebugApk   install the debug APK from the build tree instead of the release APK.
+                  Named DebugApk, not Debug: CmdletBinding already defines -Debug as a
+                  common parameter, and redefining it is a hard parse error.
 #>
 [CmdletBinding()]
 param(
-    [switch]$Debug
+    [switch]$DebugApk
 )
 
 $ErrorActionPreference = 'Stop'
@@ -32,7 +34,7 @@ $Adb       = Join-Path $Sdk 'platform-tools\adb.exe'
 $Avd       = 'fourinarow'
 $Package   = 'com.bershad.fourinarow'
 
-$apk = if ($Debug) {
+$apk = if ($DebugApk) {
     Join-Path $Project 'android\app\build\outputs\apk\debug\app-debug.apk'
 } else {
     Join-Path $Project 'FourInARow-1.0.apk'
@@ -50,6 +52,11 @@ if (Get-Process qemu-system-x86_64 -ErrorAction SilentlyContinue) {
         -ArgumentList @('-avd', $Avd, '-no-audio', '-no-boot-anim',
                         '-gpu', 'swiftshader_indirect', '-no-snapshot-save')
 }
+
+# adb writes ordinary progress and "not ready yet" chatter to stderr, which PowerShell
+# turns into an error record - fatal while ErrorActionPreference is Stop. Every failure
+# below is checked explicitly and raised with throw, which stays terminating regardless.
+$ErrorActionPreference = 'Continue'
 
 Write-Host 'Waiting for Android to come up...' -ForegroundColor Cyan
 $deadline = (Get-Date).AddMinutes(10)

@@ -83,8 +83,8 @@ This VM **can** run the Android emulator - `emulator -accel-check` reports WHPX 
 tested, and it is wrong.)
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File tools\run_emulator.ps1          # release APK
-powershell -ExecutionPolicy Bypass -File tools\run_emulator.ps1 -Debug   # debug build
+powershell -ExecutionPolicy Bypass -File tools\run_emulator.ps1             # release APK
+powershell -ExecutionPolicy Bypass -File tools\run_emulator.ps1 -DebugApk   # debug build
 ```
 
 That script boots the `fourinarow` AVD, installs, and launches the app. Three things it
