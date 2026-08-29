@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Launcher icon foreground: a three-by-three slice of the board with a red diagonal
+    completed through it.
+
+    Geometry is set by the adaptive-icon safe zone - a 66dp circle centred on the 108dp
+    canvas, so radius 33 from (54,54). Anything outside it is clipped by a round launcher
+    mask AND by the Android 12+ splash screen, which is the tighter of the two.
+    Grid spacing 15.5 puts a corner disc's CENTRE at 15.5*sqrt(2) = 21.9 from the middle;
+    adding the 8.5 disc radius gives 30.4, inside 33. The radius has to be counted - the
+    first version of this file only checked the centres and the corner discs came back
+    sliced off in the splash screen.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- empty holes -->
+    <path android:fillColor="#FFFFFF" android:fillAlpha="0.20"
+        android:pathData="M30,54 a8.5,8.5 0 1,0 17,0 a8.5,8.5 0 1,0 -17,0 Z" />
+    <path android:fillColor="#FFFFFF" android:fillAlpha="0.20"
+        android:pathData="M61,54 a8.5,8.5 0 1,0 17,0 a8.5,8.5 0 1,0 -17,0 Z" />
+    <path android:fillColor="#FFFFFF" android:fillAlpha="0.20"
+        android:pathData="M45.5,69.5 a8.5,8.5 0 1,0 17,0 a8.5,8.5 0 1,0 -17,0 Z" />
+
+    <!-- yellow -->
+    <path android:fillColor="#F5C023"
+        android:pathData="M45.5,38.5 a8.5,8.5 0 1,0 17,0 a8.5,8.5 0 1,0 -17,0 Z" />
+    <path android:fillColor="#F5C023"
+        android:pathData="M61,38.5 a8.5,8.5 0 1,0 17,0 a8.5,8.5 0 1,0 -17,0 Z" />
+    <path android:fillColor="#F5C023"
+        android:pathData="M30,69.5 a8.5,8.5 0 1,0 17,0 a8.5,8.5 0 1,0 -17,0 Z" />
+
+    <!-- the winning red diagonal -->
+    <path android:fillColor="#E4443B"
+        android:pathData="M30,38.5 a8.5,8.5 0 1,0 17,0 a8.5,8.5 0 1,0 -17,0 Z" />
+    <path android:fillColor="#E4443B"
+        android:pathData="M45.5,54 a8.5,8.5 0 1,0 17,0 a8.5,8.5 0 1,0 -17,0 Z" />
+    <path android:fillColor="#E4443B"
+        android:pathData="M61,69.5 a8.5,8.5 0 1,0 17,0 a8.5,8.5 0 1,0 -17,0 Z" />
+</vector>

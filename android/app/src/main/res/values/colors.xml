@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Kept in step with LightPalette/DarkPalette in ui/Theme.kt. This one exists only so
+         the window is already the right colour before Compose draws its first frame. -->
+    <color name="app_bg">#EDF1F7</color>
+    <color name="ic_launcher_background">#1E56C7</color>
+</resources>
